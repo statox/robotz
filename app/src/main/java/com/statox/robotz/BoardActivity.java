@@ -1,17 +1,36 @@
 package com.statox.robotz;
 
+import android.animation.ObjectAnimator;
+import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 
 public class BoardActivity extends ActionBarActivity {
+    public ImageView astronaut;
+    public ImageView robot1;
+
+    /* how much images should be deplaced */
+    private int STEP = 50;
+
+    /* used for detection of swipes */
+    private float x1,x2;
+    private float y1,y2;
+    static final int MIN_DISTANCE = 150;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
+        astronaut = (ImageView) findViewById(R.id.astronaut);
+        robot1 = (ImageView) findViewById(R.id.robot1);
     }
 
     @Override
@@ -34,5 +53,104 @@ public class BoardActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /* here we get the swipe made by the user to deplace the astronaut */
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        switch(event.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:   // point where the finger touch the screen
+                x1 = event.getX();
+                y1 = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:     // point where the finger leave the screen
+                x2 = event.getX();
+                y2 = event.getY();
+                float deltaX = x2 - x1;
+                float deltaY = y2 - y1;
+                if (Math.abs(deltaX) > MIN_DISTANCE)
+                {
+                    if (x2 < x1)
+                        movePlayerL();
+                    else
+                        movePlayerR();
+                }
+                if (Math.abs(deltaY) > MIN_DISTANCE)
+                {
+                    if (y2 < y1)
+                        movePlayerU();
+                    else
+                        movePlayerD();
+                }
+                /* now let the robots chase the astronaut */
+                moveRobots();
+                break;
+        }
+        
+        return super.onTouchEvent(event);
+    }
+
+    /* player movement */
+    /* left */
+    public void movePlayerL(){
+        astronaut.setX(astronaut.getX() - STEP);
+    }
+    /* up */
+    public void movePlayerU(){
+        astronaut.setY(astronaut.getY() - STEP);
+    }
+    /* right */
+    public void movePlayerR(){
+        astronaut.setX(astronaut.getX() + STEP);
+    }
+    /* down */
+    public void movePlayerD(){
+        astronaut.setY(astronaut.getY() + STEP);
+    }
+
+    /* robots movements */
+    public void moveRobots() {
+        /* get the position of the astonaut */
+        float astroX = astronaut.getX();
+        float astroY = astronaut.getY();
+
+        /* select the robot to deplace */
+        ImageView r = robot1;
+
+        /* get the position of the current robot */
+        float robotX = r.getX();
+        float robotY = r.getY();
+
+        /* deplace the current robot */
+        if (robotX < astroX) {
+            moveRobotR(r);
+        }else if (robotX > astroX) {
+            moveRobotL(r);
+        }
+
+        if (robotY < astroY) {
+            moveRobotD(r);
+        } else if (robotY > astroY) {
+            moveRobotU(r);
+        }
+
+    }
+    /* left */
+    public void moveRobotL(ImageView robot){
+        robot.setX(robot.getX() - STEP);
+    }
+    /* up */
+    public void moveRobotU(ImageView robot){
+        robot.setY(robot.getY() - STEP);
+    }
+    /* right */
+    public void moveRobotR(ImageView robot){
+        robot.setX(robot.getX() + STEP);
+    }
+    /* down */
+    public void moveRobotD(ImageView robot){
+        robot.setY(robot.getY() + STEP);
     }
 }
