@@ -12,10 +12,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.Vector;
+
 
 public class BoardActivity extends ActionBarActivity {
     public ImageView astronaut;
-    public ImageView robot1;
+    public Vector<ImageView> robots;
 
     /* how much images should be deplaced */
     private int STEP = 50;
@@ -30,7 +32,9 @@ public class BoardActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
         astronaut = (ImageView) findViewById(R.id.astronaut);
-        robot1 = (ImageView) findViewById(R.id.robot1);
+        robots = new Vector<ImageView>();
+        robots.add( (ImageView) findViewById(R.id.robot1));
+        robots.add( (ImageView) findViewById(R.id.robot2));
     }
 
     @Override
@@ -88,7 +92,7 @@ public class BoardActivity extends ActionBarActivity {
                 moveRobots();
                 break;
         }
-        
+
         return super.onTouchEvent(event);
     }
 
@@ -116,24 +120,23 @@ public class BoardActivity extends ActionBarActivity {
         float astroX = astronaut.getX();
         float astroY = astronaut.getY();
 
-        /* select the robot to deplace */
-        ImageView r = robot1;
-
+        for (ImageView r : robots) {
         /* get the position of the current robot */
-        float robotX = r.getX();
-        float robotY = r.getY();
+            float robotX = r.getX();
+            float robotY = r.getY();
 
         /* deplace the current robot */
-        if (robotX < astroX) {
-            moveRobotR(r);
-        }else if (robotX > astroX) {
-            moveRobotL(r);
-        }
+            if (robotX < astroX) {
+                moveRobotR(r);
+            } else if (robotX > astroX) {
+                moveRobotL(r);
+            }
 
-        if (robotY < astroY) {
-            moveRobotD(r);
-        } else if (robotY > astroY) {
-            moveRobotU(r);
+            if (robotY < astroY) {
+                moveRobotD(r);
+            } else if (robotY > astroY) {
+                moveRobotU(r);
+            }
         }
 
     }
