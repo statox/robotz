@@ -3,6 +3,7 @@ package com.statox.robotz;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -22,8 +23,9 @@ import java.util.Vector;
 
 
 public class BoardActivity extends ActionBarActivity {
-    public ImageView astronaut;
-    public Vector<ImageView> robots;
+    public Astronaut astronaut;
+    public Robots robots;
+    public Vector<ImageView> wreckages;
 
     /* how much images should be deplaced */
     private int STEP = 50;
@@ -36,15 +38,21 @@ public class BoardActivity extends ActionBarActivity {
     private float y1,y2;
     static final int MIN_DISTANCE = 150;
 
+    /* layout of the activity */
+    private RelativeLayout layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
+        /* initialise the wreckage vector */
+        wreckages = new Vector<ImageView>();
+
         /* first get the layout from the xml */
         LayoutInflater inflater;
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.activity_board , null);
+        layout = (RelativeLayout) inflater.inflate(R.layout.activity_board , null);
 
         /* get the size of the screen */
         /* TODO: replace it with the size of the layout */
@@ -53,27 +61,21 @@ public class BoardActivity extends ActionBarActivity {
         display.getSize(screenSize);
 
         /* creation of the astronaut */
-        astronaut = new ImageView(this);
-        astronaut.setImageResource(R.drawable.astronaut);
-        astronaut.setX(500);
-        astronaut.setY(1000);
+        astronaut = new Astronaut(this, screenSize);
         layout.addView(astronaut);
 
-        /* creation of the robots */
-        robots = new Vector<ImageView>();
+        /* creation of the container of robots */
+        robots = new Robots();
 
-        /* creation of the ImageView for each robot */
-        for (int i=0; i<4; ++i) {
-            ImageView newRobot = new ImageView(this);
-            newRobot.setImageResource(R.drawable.robot);
-            newRobot.setY((float) (Math.random() * screenSize.y));
-            newRobot.setX((float) (Math.random() * screenSize.x));
-            robots.add(newRobot);
+        /* creation of each robots */
+        for (int i=0; i<20; ++i) {
+            Robot newRobot = new Robot(this, screenSize);
+            robots.list.add(newRobot);
         }
 
         /* adding the robots to the layout */
-        for (ImageView i: robots)
-            layout.addView(i);
+        for (Robot r: robots.list)
+            layout.addView(r);
 
         setContentView(layout);
     }
@@ -115,90 +117,29 @@ public class BoardActivity extends ActionBarActivity {
                 y2 = event.getY();
                 float deltaX = x2 - x1;
                 float deltaY = y2 - y1;
+                /* move the astronaut */
                 if (Math.abs(deltaX) > MIN_DISTANCE)
                 {
                     if (x2 < x1)
-                        movePlayerL();
+                        astronaut.moveL();
                     else
-                        movePlayerR();
+                        astronaut.moveR();
                 }
                 if (Math.abs(deltaY) > MIN_DISTANCE)
                 {
                     if (y2 < y1)
-                        movePlayerU();
+                        astronaut.moveU();
                     else
-                        movePlayerD();
+                        astronaut.moveD();
                 }
                 /* now let the robots chase the astronaut */
-                moveRobots();
+                robots.moveRobots(astronaut);
+                /* after the deplacements check if the robots collides with each others */
+                robots.checkCollisions(this, layout, wreckages);
+                setContentView(layout);
                 break;
         }
 
         return super.onTouchEvent(event);
-    }
-
-    /* player movement */
-    /* left */
-    public void movePlayerL(){
-        if (astronaut.getX() >= STEP)
-            astronaut.setX(astronaut.getX() - STEP);
-    }
-    /* up */
-    public void movePlayerU(){
-        if (astronaut.getY() >= STEP)
-            astronaut.setY(astronaut.getY() - STEP);
-    }
-    /* right */
-    public void movePlayerR() {
-        if (astronaut.getX() <= screenSize.x - STEP)
-            astronaut.setX(astronaut.getX() + STEP);
-    }
-    /* down */
-    public void movePlayerD() {
-        if (astronaut.getY() <= screenSize.y - STEP)
-            astronaut.setY(astronaut.getY() + STEP);
-    }
-
-    /* robots movements */
-    public void moveRobots() {
-        /* get the position of the astonaut */
-        float astroX = astronaut.getX();
-        float astroY = astronaut.getY();
-
-        for (ImageView r : robots) {
-            /* get the position of the current robot */
-            float robotX = r.getX();
-            float robotY = r.getY();
-
-            /* deplace the current robot */
-            if (robotX < astroX) {
-                moveRobotR(r);
-            } else if (robotX > astroX) {
-                moveRobotL(r);
-            }
-
-            if (robotY < astroY) {
-                moveRobotD(r);
-            } else if (robotY > astroY) {
-                moveRobotU(r);
-            }
-        }
-
-    }
-    /* left */
-    public void moveRobotL(ImageView robot){
-        robot.setX(robot.getX() - STEP);
-    }
-    /* up */
-    public void moveRobotU(ImageView robot){
-        robot.setY(robot.getY() - STEP);
-    }
-    /* right */
-    public void moveRobotR(ImageView robot){
-        robot.setX(robot.getX() + STEP);
-    }
-    /* down */
-    public void moveRobotD(ImageView robot){
-        robot.setY(robot.getY() + STEP);
     }
 }
