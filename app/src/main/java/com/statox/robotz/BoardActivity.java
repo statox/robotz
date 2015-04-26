@@ -66,8 +66,8 @@ public class BoardActivity extends ActionBarActivity {
         for (int i=0; i<4; ++i) {
             ImageView newRobot = new ImageView(this);
             newRobot.setImageResource(R.drawable.robot);
-            newRobot.setY(500 * i);
-            newRobot.setX(300 * i);
+            newRobot.setY((float) (Math.random() * screenSize.y));
+            newRobot.setX((float) (Math.random() * screenSize.x));
             robots.add(newRobot);
         }
 
