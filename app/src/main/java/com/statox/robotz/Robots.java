@@ -21,8 +21,18 @@ public class Robots {
     public Vector<Robot> list;
     public Robots () { list = new Vector<Robot>(); }
 
+    /* this method correspon to the turn of the computer:
+     * we deplace the robots and check for the collisions
+     */
+    public void turn (Astronaut astronaut, Context context, RelativeLayout layout, Vector<ImageView> wreckages) {
+        /* let the robots chase the astronaut */
+        moveRobots(astronaut);
+        /* after the deplacements check if the robots collides with each others */
+        checkCollisions(context, layout, wreckages);
+    }
+
     /* this method moves each robot to the astronaut */
-    public void moveRobots(ImageView astronaut) {
+    public void moveRobots(Astronaut astronaut) {
         /* get the position of the astonaut */
         float astroX = astronaut.getX();
         float astroY = astronaut.getY();

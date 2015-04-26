@@ -27,9 +27,6 @@ public class BoardActivity extends ActionBarActivity {
     public Robots robots;
     public Vector<ImageView> wreckages;
 
-    /* how much images should be deplaced */
-    private int STEP = 50;
-
     /* size of the screen */
     private Point screenSize;
 
@@ -40,6 +37,11 @@ public class BoardActivity extends ActionBarActivity {
 
     /* layout of the activity */
     private RelativeLayout layout;
+
+    /* entries in the menu */
+    private int ID_MENU_RANDOM_TL = 1;
+    private int ID_MENU_SAFE_TL = 2;
+    private int ID_MENU_WAIT = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,19 +86,38 @@ public class BoardActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_board, menu);
+
+        menu.add(Menu.NONE, ID_MENU_RANDOM_TL, Menu.NONE, R.string.random_teleport);
+        menu.add(Menu.NONE, ID_MENU_SAFE_TL, Menu.NONE, R.string.safe_teleport_1);
+        menu.add(Menu.NONE, ID_MENU_WAIT, Menu.NONE, R.string.wait);
+
         return true;
     }
 
+    /* execute the actions selected in the menu
+     *  - Random Teleportation
+     *  - Safe Teleportation
+     *  - Wait for the bots until the end of the level
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case 1:
+                astronaut.randomTeleport();
+                break;
+            case 2:
+                astronaut.safeTeleport(robots, wreckages);
+                break;
+            case 3:
+                while (checkEndOfLevel() == 0) {
+                    robots.turn(astronaut, this, layout, wreckages);
+                }
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -132,14 +153,29 @@ public class BoardActivity extends ActionBarActivity {
                     else
                         astronaut.moveD();
                 }
-                /* now let the robots chase the astronaut */
-                robots.moveRobots(astronaut);
-                /* after the deplacements check if the robots collides with each others */
-                robots.checkCollisions(this, layout, wreckages);
-                setContentView(layout);
+
+                robots.turn(astronaut, this, layout, wreckages);
+                checkEndOfLevel();
+
                 break;
         }
-
         return super.onTouchEvent(event);
+    }
+
+    /* This methods check if the level is ended and who wins.
+     *  returns:
+     *  0 not ended
+     *  1 player win
+     *  -1 robots win
+     */
+    public int checkEndOfLevel () {
+        if (astronaut.isInCollision(robots, wreckages)) {
+            Toast.makeText(getApplicationContext(), "You loose!", Toast.LENGTH_LONG).show();
+            return -1;
+        } else if (robots.list.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_LONG).show();
+            return 1;
+        }
+        return 0;
     }
 }
