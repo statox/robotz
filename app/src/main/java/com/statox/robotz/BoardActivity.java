@@ -1,15 +1,21 @@
 package com.statox.robotz;
 
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.graphics.Point;
 import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.Vector;
@@ -22,6 +28,9 @@ public class BoardActivity extends ActionBarActivity {
     /* how much images should be deplaced */
     private int STEP = 50;
 
+    /* size of the screen */
+    private Point screenSize;
+
     /* used for detection of swipes */
     private float x1,x2;
     private float y1,y2;
@@ -31,10 +40,42 @@ public class BoardActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
-        astronaut = (ImageView) findViewById(R.id.astronaut);
+
+        /* first get the layout from the xml */
+        LayoutInflater inflater;
+        inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.activity_board , null);
+
+        /* get the size of the screen */
+        /* TODO: replace it with the size of the layout */
+        Display display = getWindowManager().getDefaultDisplay();
+        screenSize = new Point();
+        display.getSize(screenSize);
+
+        /* creation of the astronaut */
+        astronaut = new ImageView(this);
+        astronaut.setImageResource(R.drawable.astronaut);
+        astronaut.setX(500);
+        astronaut.setY(1000);
+        layout.addView(astronaut);
+
+        /* creation of the robots */
         robots = new Vector<ImageView>();
-        robots.add( (ImageView) findViewById(R.id.robot1));
-        robots.add( (ImageView) findViewById(R.id.robot2));
+
+        /* creation of the ImageView for each robot */
+        for (int i=0; i<4; ++i) {
+            ImageView newRobot = new ImageView(this);
+            newRobot.setImageResource(R.drawable.robot);
+            newRobot.setY(500 * i);
+            newRobot.setX(300 * i);
+            robots.add(newRobot);
+        }
+
+        /* adding the robots to the layout */
+        for (ImageView i: robots)
+            layout.addView(i);
+
+        setContentView(layout);
     }
 
     @Override
@@ -99,19 +140,23 @@ public class BoardActivity extends ActionBarActivity {
     /* player movement */
     /* left */
     public void movePlayerL(){
-        astronaut.setX(astronaut.getX() - STEP);
+        if (astronaut.getX() >= STEP)
+            astronaut.setX(astronaut.getX() - STEP);
     }
     /* up */
     public void movePlayerU(){
-        astronaut.setY(astronaut.getY() - STEP);
+        if (astronaut.getY() >= STEP)
+            astronaut.setY(astronaut.getY() - STEP);
     }
     /* right */
-    public void movePlayerR(){
-        astronaut.setX(astronaut.getX() + STEP);
+    public void movePlayerR() {
+        if (astronaut.getX() <= screenSize.x - STEP)
+            astronaut.setX(astronaut.getX() + STEP);
     }
     /* down */
-    public void movePlayerD(){
-        astronaut.setY(astronaut.getY() + STEP);
+    public void movePlayerD() {
+        if (astronaut.getY() <= screenSize.y - STEP)
+            astronaut.setY(astronaut.getY() + STEP);
     }
 
     /* robots movements */
@@ -121,11 +166,11 @@ public class BoardActivity extends ActionBarActivity {
         float astroY = astronaut.getY();
 
         for (ImageView r : robots) {
-        /* get the position of the current robot */
+            /* get the position of the current robot */
             float robotX = r.getX();
             float robotY = r.getY();
 
-        /* deplace the current robot */
+            /* deplace the current robot */
             if (robotX < astroX) {
                 moveRobotR(r);
             } else if (robotX > astroX) {
