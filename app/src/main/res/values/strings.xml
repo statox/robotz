@@ -1,6 +1,25 @@
 <resources>
     <string name="app_name">robotz</string>
 
-    <string name="hello_world">Hello world!</string>
+    <!-- Board Activity -->
     <string name="action_settings">Settings</string>
+    <string name="random_teleport">Random Teleportation</string>
+    <string name="safe_teleport_1">Safe Teleportation ( </string>
+    <string name="safe_teleport_2"> left)</string>
+    <string name="wait">Wait for the Robots</string>
+    <string name="title_activity_next_level">NextLevelActivity</string>
+
+    <!-- NextLevel Activity -->
+    <string name="win">Level up!</string>
+    <string name="nextLevelBtn">GO !</string>
+    <string name="title_activity_lost">LostActivity</string>
+
+    <!-- Lost Activity -->
+    <string name="lose">The robots got you!</string>
+    <string name="playAgainBtn">Play again</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

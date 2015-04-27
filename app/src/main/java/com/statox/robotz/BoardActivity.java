@@ -19,15 +19,27 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Vector;
 
 
-public class BoardActivity extends ActionBarActivity {
+public class BoardActivity extends Activity /*ActionBarActivity*/ {
     public Astronaut astronaut;
     public Robots robots;
     public Vector<ImageView> wreckages;
+
+    /* number of safe teleportations left
+     * We need to send this value and to get it back from the next level activity
+     * to keep this number between the levels
+     */
+    private int nbSafeTeleports;
+    public final static String MSG_TELEPORTS = "com.statox.robotz.board.teleports";
+
+    /* score */
+    public int score;
+    public final static String MSG_SCORE = "com.statox.robotz.board.score";
 
     /* level */
     private int level;
@@ -48,9 +60,11 @@ public class BoardActivity extends ActionBarActivity {
     private RelativeLayout layout;
 
     /* entries in the menu */
+    /*
     private int ID_MENU_RANDOM_TL = 1;
     private int ID_MENU_SAFE_TL = 2;
     private int ID_MENU_WAIT = 3;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +74,11 @@ public class BoardActivity extends ActionBarActivity {
         /* get the level */
         Intent intent = getIntent();
         level = intent.getIntExtra(NextLevelActivity.MSG_LVL, 1);
+        nbSafeTeleports = intent.getIntExtra(NextLevelActivity.MSG_TELEPORTS, 10);
+
+        if (level==1){
+            score = 0;
+        }
 
         /* initialise the wreckage vector */
         wreckages = new Vector<ImageView>();
@@ -76,7 +95,7 @@ public class BoardActivity extends ActionBarActivity {
         display.getSize(screenSize);
 
         /* creation of the astronaut */
-        astronaut = new Astronaut(this, screenSize);
+        astronaut = new Astronaut(this, screenSize, nbSafeTeleports);
         layout.addView(astronaut);
 
         /* creation of the container of robots */
@@ -93,47 +112,7 @@ public class BoardActivity extends ActionBarActivity {
             layout.addView(r);
 
         setContentView(layout);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_board, menu);
-
-        menu.add(Menu.NONE, ID_MENU_RANDOM_TL, Menu.NONE, R.string.random_teleport);
-        menu.add(Menu.NONE, ID_MENU_SAFE_TL, Menu.NONE, R.string.safe_teleport_1);
-        menu.add(Menu.NONE, ID_MENU_WAIT, Menu.NONE, R.string.wait);
-
-        return true;
-    }
-
-    /* execute the actions selected in the menu
-     *  - Random Teleportation
-     *  - Safe Teleportation
-     *  - Wait for the bots until the end of the level
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        switch (id) {
-            case 1:
-                astronaut.randomTeleport();
-                break;
-            case 2:
-                astronaut.safeTeleport(robots, wreckages);
-                break;
-            case 3:
-                while (checkEndOfLevel() == 0) {
-                    robots.turn(astronaut, this, layout, wreckages);
-                }
-                break;
-            default:
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
+        ((TextView) findViewById(R.id.textSafeTeleport)).setText(String.valueOf(astronaut.getNbSafeTeleports()));
     }
 
     /* here we get the swipe made by the user to deplace the astronaut */
@@ -167,7 +146,7 @@ public class BoardActivity extends ActionBarActivity {
                         astronaut.moveD();
                 }
 
-                robots.turn(astronaut, this, layout, wreckages);
+                score += robots.turn(astronaut, this, layout, wreckages);
                 checkEndOfLevel();
 
                 break;
@@ -184,15 +163,40 @@ public class BoardActivity extends ActionBarActivity {
     public int checkEndOfLevel () {
         if (astronaut.isInCollision(robots, wreckages)) {
             Toast.makeText(getApplicationContext(), "You loose!", Toast.LENGTH_SHORT).show();
+            // launch the LostActivity
+            Intent intent = new Intent(this, LostActivity.class);
+            intent.putExtra(MSG_SCORE, score);
+            startActivity(intent);
             return -1;
         } else if (robots.list.isEmpty()) {
             Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_SHORT).show();
             // launch the NextLevelActivity
             Intent intent = new Intent(this, NextLevelActivity.class);
             intent.putExtra(MSG_LVL, level);
+            intent.putExtra(MSG_SCORE, score);
+            intent.putExtra(MSG_TELEPORTS, astronaut.getNbSafeTeleports());
             startActivity(intent);
             return 1;
         }
         return 0;
+    }
+
+    /* those methods are activated by the buttons */
+    public void randomTeleport(View v) {
+        astronaut.randomTeleport();
+    }
+    public void safeTeleport(View v) {
+        if (astronaut.getNbSafeTeleports() > 0) {
+            astronaut.safeTeleport(robots, wreckages);
+            astronaut.setNbSafeTeleports(astronaut.getNbSafeTeleports() - 1);
+            ((TextView) findViewById(R.id.textSafeTeleport)).setText(String.valueOf(astronaut.getNbSafeTeleports()));
+        } else {
+            Toast.makeText(getApplicationContext(), "no safe teleport left", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void waitForRobots(View v) {
+        while (checkEndOfLevel() == 0) {
+            score += robots.turn(astronaut, this, layout, wreckages);
+        }
     }
 }

@@ -1,16 +1,20 @@
 package com.statox.robotz;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 
-public class NextLevelActivity extends ActionBarActivity {
+public class NextLevelActivity extends Activity {
     public final static String MSG_LVL = "com.statox.robotz.nextlevel.level";
+    public final static String MSG_TELEPORTS = "com.statox.robotz.nextlevel.teleports";
     private int level;
+    private int nbSafeTeleports;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,34 +22,16 @@ public class NextLevelActivity extends ActionBarActivity {
 
         Intent intent = getIntent();
         level = intent.getIntExtra(BoardActivity.MSG_LVL, 1);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_next_level, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        nbSafeTeleports = intent.getIntExtra(BoardActivity.MSG_TELEPORTS, 10);
+        int score = intent.getIntExtra(BoardActivity.MSG_SCORE, 0);
+        ((TextView) findViewById(R.id.textViewNextLevel)).setText("Score: " + score);
     }
 
     public void goToNextLevel(View view) {
         // launch the NextLevelActivity
         Intent intent = new Intent(this, BoardActivity.class);
         intent.putExtra(MSG_LVL, level+1);
+        intent.putExtra(MSG_TELEPORTS, nbSafeTeleports+1);
         startActivity(intent);
     }
 }

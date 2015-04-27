@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".NextLevelActivity"
+            android:label="@string/title_activity_next_level" >
+        </activity>
+        <activity
+            android:name=".LostActivity"
+            android:label="@string/title_activity_lost" >
+        </activity>
     </application>
 
 </manifest>

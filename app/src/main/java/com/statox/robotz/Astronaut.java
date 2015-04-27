@@ -19,17 +19,22 @@ public class Astronaut extends ImageView {
     private int stepH;
     private double maxX;
     private double maxY;
+    private int nbSafeTeleports;
 
-    public Astronaut(Context context, Point screenSize) {
+    public Astronaut(Context context, Point screenSize, int safeTL) {
         super(context);
         setImageResource(R.drawable.astronaut);
         maxX = screenSize.x;
         maxY = screenSize.y;
         setY((float) (maxY/2));
-        setX((float) (maxX/2));
+        setX((float) (maxX / 2));
         stepV = 24;
         stepH = 24;
+        nbSafeTeleports = safeTL;
     }
+
+    public int getNbSafeTeleports() { return nbSafeTeleports; }
+    public void setNbSafeTeleports(int nbSafeTeleports) { this.nbSafeTeleports = nbSafeTeleports; }
 
     /* player movement */
     /* left */

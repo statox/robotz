@@ -21,14 +21,16 @@ public class Robots {
     public Vector<Robot> list;
     public Robots () { list = new Vector<Robot>(); }
 
-    /* this method correspon to the turn of the computer:
+    /* this method correspond to the turn of the computer:
      * we deplace the robots and check for the collisions
+     *
+     * returns the number of robots destroyed in the turn to let BoardActivity uptade the score
      */
-    public void turn (Astronaut astronaut, Context context, RelativeLayout layout, Vector<ImageView> wreckages) {
+    public int turn (Astronaut astronaut, Context context, RelativeLayout layout, Vector<ImageView> wreckages) {
         /* let the robots chase the astronaut */
         moveRobots(astronaut);
         /* after the deplacements check if the robots collides with each others */
-        checkCollisions(context, layout, wreckages);
+        return checkCollisions(context, layout, wreckages);
     }
 
     /* this method moves each robot to the astronaut */
@@ -61,9 +63,15 @@ public class Robots {
      * from a previous collision.
      * If the robot is in collision, it is "destroyed" (removed from the list and visibility set to gone)
      * and a new wreckage is placed if necessary.
+     *
+     * returns the number of robots destroyed
+     *
      */
-    public boolean checkCollisions(Context context, RelativeLayout layout, Vector<ImageView> wreckages) {
+    public int checkCollisions(Context context, RelativeLayout layout, Vector<ImageView> wreckages) {
+        int nbCollisions = 0;
+
         boolean collision = false;
+
         for (Robot r1: list) {
             Log.d("robotz.log", "robot1: " + r1.toString());
             Rect rc1 = new Rect();
@@ -83,6 +91,7 @@ public class Robots {
 
                     /* mark the robot to remove */
                     r1.setToRemove(true);
+                    ++nbCollisions;
                 }
             }
 
@@ -110,6 +119,7 @@ public class Robots {
                             /* remove the 2 destroyed robots */
                             r1.setToRemove(true);
                             r2.setToRemove(true);
+                            nbCollisions+=2;
                         }
                     }
                 }
@@ -126,6 +136,6 @@ public class Robots {
                 i.remove();
             }
         }
-        return collision;
+        return nbCollisions;
     }
 }
