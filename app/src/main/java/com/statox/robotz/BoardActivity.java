@@ -1,7 +1,9 @@
 package com.statox.robotz;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.media.Image;
@@ -27,6 +29,13 @@ public class BoardActivity extends ActionBarActivity {
     public Robots robots;
     public Vector<ImageView> wreckages;
 
+    /* level */
+    private int level;
+    public final static String MSG_LVL = "com.statox.robotz.board.level";
+
+    /* number of robots on the screen */
+    private int NB_ROBOTS = 10;
+
     /* size of the screen */
     private Point screenSize;
 
@@ -47,6 +56,10 @@ public class BoardActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
+
+        /* get the level */
+        Intent intent = getIntent();
+        level = intent.getIntExtra(NextLevelActivity.MSG_LVL, 1);
 
         /* initialise the wreckage vector */
         wreckages = new Vector<ImageView>();
@@ -70,7 +83,7 @@ public class BoardActivity extends ActionBarActivity {
         robots = new Robots();
 
         /* creation of each robots */
-        for (int i=0; i<20; ++i) {
+        for (int i=0; i<10*level; ++i) {
             Robot newRobot = new Robot(this, screenSize);
             robots.list.add(newRobot);
         }
@@ -170,10 +183,14 @@ public class BoardActivity extends ActionBarActivity {
      */
     public int checkEndOfLevel () {
         if (astronaut.isInCollision(robots, wreckages)) {
-            Toast.makeText(getApplicationContext(), "You loose!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "You loose!", Toast.LENGTH_SHORT).show();
             return -1;
         } else if (robots.list.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "You win!", Toast.LENGTH_SHORT).show();
+            // launch the NextLevelActivity
+            Intent intent = new Intent(this, NextLevelActivity.class);
+            intent.putExtra(MSG_LVL, level);
+            startActivity(intent);
             return 1;
         }
         return 0;
