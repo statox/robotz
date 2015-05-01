@@ -1,7 +1,9 @@
 package com.statox.robotz;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,7 +26,7 @@ public class LostActivity extends Activity {
         Intent intent = getIntent();
         int score = intent.getIntExtra(BoardActivity.MSG_SCORE, 1);
         ((TextView) findViewById(R.id.textViewScore)).setText("Score: " + score);
-
+        
     }
 
     /* Start a new game
