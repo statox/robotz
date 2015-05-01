@@ -25,21 +25,28 @@ public class LostActivity extends Activity {
         /* get the score */
         Intent intent = getIntent();
         int score = intent.getIntExtra(BoardActivity.MSG_SCORE, 1);
-        int highscore = 0;
+
         /* getting the previous highscore */
-        /*SharedPreferences prefs = this.getSharedPreferences("highscore", Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences("highscore", Context.MODE_PRIVATE);
         int highscore = prefs.getInt("highscore", 0); //0 is the default value
-*/
+
+        /* String to display the results */
+        String scoreString = "Score: " + score;
+        String highScoreString = "Highscore: " + highscore;
+
         /* save the score if highscore */
-  /*      if (score > highscore) {
+        if (score > highscore) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("highscore", score);
             editor.commit();
+
+            scoreString= "New High score !";
+            highScoreString = "Previous: " + highscore + " New: " + score;
         }
-*/
+
         /* output the results */
-        ((TextView) findViewById(R.id.textViewScore)).setText("Score: " + score);
-        ((TextView) findViewById(R.id.textViewHighScore)).setText("Previous HighScore: " + highscore);
+        ((TextView) findViewById(R.id.textViewScore)).setText(scoreString);
+        ((TextView) findViewById(R.id.textViewHighScore)).setText(highScoreString);
 
     }
 
