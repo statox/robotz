@@ -60,6 +60,8 @@ public class Robots {
             } else if (robotY > astroY) {
                 r.moveU();
             }
+            /* change the drawable to create a pseudo animation */
+            r.changeDrawable();
         }
     }
 

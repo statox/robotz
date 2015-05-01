@@ -9,6 +9,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -187,7 +188,6 @@ public class BoardActivity extends Activity {
     public void waitForRobots(View v) {
         while (checkEndOfLevel() == 0) {
             score += robots.turn(astronaut, this, layout, wreckages);
-            ((TextView) findViewById(R.id.textViewCurrentScore)).setText("score: " + score);
         }
     }
 }
