@@ -21,11 +21,4 @@
     <string name="lose">The robots got you!</string>
     <string name="playAgainBtn">Play again</string>
 
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="title_activity_main">MainActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-
 </resources>

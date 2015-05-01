@@ -4,40 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/astronaut"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/astronaut" />
--->
-<!--
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/robot1"
-        android:src="@drawable/robot"
-        android:layout_below="@+id/astronaut"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="76dp"
-        android:layout_marginEnd="76dp"
-        android:layout_marginTop="123dp" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/robot2"
-        android:src="@drawable/robot"
-        android:layout_marginTop="85dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="58dp"
-        android:layout_marginStart="58dp" />
--->
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

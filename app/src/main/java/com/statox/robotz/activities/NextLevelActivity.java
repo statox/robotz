@@ -1,13 +1,13 @@
-package com.statox.robotz;
+package com.statox.robotz.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.statox.robotz.R;
+import com.statox.robotz.activities.BoardActivity;
 
 
 public class NextLevelActivity extends Activity {
@@ -17,6 +17,7 @@ public class NextLevelActivity extends Activity {
     private int level;
     private int nbSafeTeleports;
     private int score;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class NextLevelActivity extends Activity {
     }
 
     public void goToNextLevel(View view) {
-        // launch the NextLevelActivity
+        // launch the BoardActivity with the infos from the previous level
         Intent intent = new Intent(this, BoardActivity.class);
         intent.putExtra(MSG_LVL, level+1);
         intent.putExtra(MSG_TELEPORTS, nbSafeTeleports+1);

@@ -1,31 +1,28 @@
-package com.statox.robotz;
+package com.statox.robotz.activities;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.media.Image;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.statox.robotz.items.Astronaut;
+import com.statox.robotz.R;
+import com.statox.robotz.items.Robot;
+import com.statox.robotz.items.Robots;
+
 import java.util.Vector;
 
 
-public class BoardActivity extends Activity /*ActionBarActivity*/ {
+public class BoardActivity extends Activity {
     public Astronaut astronaut;
     public Robots robots;
     public Vector<ImageView> wreckages;
@@ -58,13 +55,6 @@ public class BoardActivity extends Activity /*ActionBarActivity*/ {
 
     /* layout of the activity */
     private RelativeLayout layout;
-
-    /* entries in the menu */
-    /*
-    private int ID_MENU_RANDOM_TL = 1;
-    private int ID_MENU_SAFE_TL = 2;
-    private int ID_MENU_WAIT = 3;
-    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +187,7 @@ public class BoardActivity extends Activity /*ActionBarActivity*/ {
     public void waitForRobots(View v) {
         while (checkEndOfLevel() == 0) {
             score += robots.turn(astronaut, this, layout, wreckages);
+            ((TextView) findViewById(R.id.textViewCurrentScore)).setText("score: " + score);
         }
     }
 }

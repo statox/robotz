@@ -1,4 +1,4 @@
-package com.statox.robotz;
+package com.statox.robotz.items;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -6,6 +6,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.statox.robotz.R;
+import com.statox.robotz.items.Astronaut;
+import com.statox.robotz.items.Robot;
 
 import java.util.Iterator;
 import java.util.Vector;

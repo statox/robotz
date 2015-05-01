@@ -1,9 +1,11 @@
-package com.statox.robotz;
+package com.statox.robotz.items;
 
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.widget.ImageView;
+
+import com.statox.robotz.R;
 
 import java.util.Vector;
 

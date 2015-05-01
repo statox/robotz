@@ -1,17 +1,15 @@
-package com.statox.robotz;
+package com.statox.robotz.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.statox.robotz.R;
+import com.statox.robotz.activities.BoardActivity;
 
 
 public class LostActivity extends Activity {
@@ -50,7 +48,8 @@ public class LostActivity extends Activity {
 
     }
 
-    /* Start a new game
+    /*
+     * Start a new game
      * Launch the Board activity (no need to give a level since the default value is 1)
      */
     public void playAgain (View view) {
