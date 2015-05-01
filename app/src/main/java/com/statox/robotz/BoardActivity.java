@@ -71,19 +71,16 @@ public class BoardActivity extends Activity /*ActionBarActivity*/ {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
 
-        /* get the level */
+        /* get the infos from the previous level */
         Intent intent = getIntent();
         level = intent.getIntExtra(NextLevelActivity.MSG_LVL, 1);
         nbSafeTeleports = intent.getIntExtra(NextLevelActivity.MSG_TELEPORTS, 10);
-
-        if (level==1){
-            score = 0;
-        }
+        score = intent.getIntExtra(NextLevelActivity.MSG_SCORE, 0);
 
         /* initialise the wreckage vector */
         wreckages = new Vector<ImageView>();
 
-        /* first get the layout from the xml */
+        /* Get the layout from the xml */
         LayoutInflater inflater;
         inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layout = (RelativeLayout) inflater.inflate(R.layout.activity_board , null);
@@ -113,6 +110,7 @@ public class BoardActivity extends Activity /*ActionBarActivity*/ {
 
         setContentView(layout);
         ((TextView) findViewById(R.id.textSafeTeleport)).setText(String.valueOf(astronaut.getNbSafeTeleports()));
+        ((TextView) findViewById(R.id.textViewCurrentScore)).setText("score: " + score);
     }
 
     /* here we get the swipe made by the user to deplace the astronaut */
@@ -147,6 +145,8 @@ public class BoardActivity extends Activity /*ActionBarActivity*/ {
                 }
 
                 score += robots.turn(astronaut, this, layout, wreckages);
+                ((TextView) findViewById(R.id.textViewCurrentScore)).setText("score: " + score);
+
                 checkEndOfLevel();
 
                 break;

@@ -22,18 +22,33 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text=""
         android:id="@+id/textViewScore"
+        android:layout_below="@+id/textViewLose"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="99dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text=""
+        android:id="@+id/textViewHighScore"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/textViewScore"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
+    <!--android:layout_alignLeft="@+id/textViewScore"
+        android:layout_alignStart="@+id/textViewScore"-->
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/playAgainBtn"
         android:id="@+id/playAgainBtn"
+        android:layout_marginBottom="68dp"
+        android:onClick="playAgain"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="152dp"
-        android:onClick="playAgain"/>
-
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>
