@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -78,9 +80,22 @@ public class BoardActivity extends Activity {
 
         /* get the size of the screen */
         /* TODO: replace it with the size of the layout */
-        Display display = getWindowManager().getDefaultDisplay();
         screenSize = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
         display.getSize(screenSize);
+
+        /* attemp to get the real size of the layout */
+        /*
+        ViewTreeObserver vto = layout.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                int width = layout.getMeasuredWidth();
+                int height = layout.getMeasuredHeight();
+            }
+        });
+        */
 
         /* creation of the astronaut */
         astronaut = new Astronaut(this, screenSize, nbSafeTeleports);
@@ -188,6 +203,7 @@ public class BoardActivity extends Activity {
     public void waitForRobots(View v) {
         while (checkEndOfLevel() == 0) {
             score += robots.turn(astronaut, this, layout, wreckages);
+            /* TODO: find a way to refresh the view so the player sees the bots moving */
         }
     }
 }
